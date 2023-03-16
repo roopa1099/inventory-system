@@ -12,22 +12,17 @@ import TableRow from '@mui/material/TableRow';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Checkbox } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
-    checkBox:
-    {
-        color: '#97A1A9',
+const useStyles = makeStyles({
+    noBalance: {
+       color:'#C0392B'
     },
-    nobalance: {
-        color: 'red'
-    },
-    lessBalance:
-    {
-        color: 'yellow'
+    lessBalance: {
+       color:'#F1C40F'
     }
-}));
+})
 
 export default function RenderTableComponent(props) {
-        const classes = useStyles();
+    const classes = useStyles();
     const [page, setPage] = useState(0);
     const [responseData, setResponseData] = useState([]);
     const [selected, setSelected] = useState([]);
@@ -131,10 +126,14 @@ export default function RenderTableComponent(props) {
     }
 
 
-    const isBalanceAvailable = (capacity) => {
-        console.log(capacity)
+    const isBalanceAvailable =(capacity) => {
+
         return capacity > 5};
-    const isEmpty = (capacity) => {return capacity == 0};
+
+    const isEmpty = (capacity) => {
+        console.log(capacity == 0);
+        return capacity == 0
+    };
 
     useEffect(() => {
         getResposeData({ pageNumber: page });
@@ -171,9 +170,9 @@ export default function RenderTableComponent(props) {
                             const isItemSelected = selected.length == column.length || isSelected(column.id);
                             return (
 
-                                <TableRow hover role="checkbox" tabIndex={-1} key={column.id}>
+                                <TableRow hover role="checkbox" tabIndex={-1} key={column.id.toString()}>
                                     <TableCell><Checkbox
-                                        id={column.id}
+                                        id={column.id.toString()}
                                         onChange={(event) => handleClick(event, column.id)}
                                         checked={isItemSelected}
                                         disabled={selected.length > 0 && !isItemSelected}
@@ -184,9 +183,8 @@ export default function RenderTableComponent(props) {
                                     <TableCell align='right' width='170px'>{column.category}</TableCell>
                                     <TableCell align='right' width='170px'>{column.shelfNumber}</TableCell>
                                     <TableCell align='right' width='170px'>{column.pricePerUnit}</TableCell>
-                                    {isBalanceAvailable(column.avlSpaceForShelf)?<TableCell align='right' width='170px'>{column.quantity}</TableCell>:
-                                    <TableCell align="right" className={isEmpty(column.avlSpaceForShelf) ? classes.nobalance : classes.lessBalance}>{column.quantity}</TableCell> }
-                                       
+                                    {/* {isBalanceAvailable(column.avlSpaceForShelf) ? <TableCell align="right" >{column.quantity}</TableCell> : ""} */}
+                                    <TableCell align="right"  width='170px'>{column.quantity}</TableCell>
                                     <TableCell align='right' width='170px'>{column.vendorLink}</TableCell>
                                 </TableRow>
                             );
@@ -199,6 +197,7 @@ export default function RenderTableComponent(props) {
                 count={totalElement}
                 page={page}
                 onPageChange={handleChangePage}
+                rowsPerPage={10}
             />
         </Paper>
     );
