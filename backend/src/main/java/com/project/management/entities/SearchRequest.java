@@ -3,6 +3,9 @@ package com.project.management.entities;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.project.management.models.Filter;
+import com.project.management.models.Pagination;
+import com.project.management.models.Sort;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,48 +25,25 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SearchRequest {
 
-    @JsonProperty("filter")
-    @JsonAlias({"filter", "status"})
-    private String filter;
 
-    @JsonProperty("search")
-    @JsonAlias({"search", "searchText"})
-    private String search;
 
-    @JsonProperty("limit")
-    @JsonAlias({"limit", "pageSize", "size"})
-    @Builder.Default
-    private int pageSize = 0;
+    private Filter filterBy;
 
-    @JsonProperty("offset")
-    @JsonAlias({"offset", "pageNo", "page"})
-    private int pageNumber;
+    private Pagination pagination;
 
-    private String sortBy;
+    private Sort sortBy;
 
-    private String orderBy;
 
-    public void setSearchText(String search) {
-        this.search = search;
+    public void setFilterBy(Filter filterBy) {
+        this.filterBy = filterBy;
     }
 
-    public void setPageSize(int limit) {
-        this.pageSize = limit;
+    public void setPagination(Pagination pagination) {
+        this.pagination = pagination;
     }
 
-    public void setSize(int limit) {
-        this.pageSize = limit;
+    public void setSortBy(Sort sort) {
+        this.sortBy = sort;
     }
-
-    public void setPageNo(int offset) {
-        this.pageNumber = offset;
-    }
-
-    public void setPage(int offset) {
-        this.pageNumber = offset;
-    }
-
-    public void setStatus(String filter) {
-        this.filter=filter;
-    }
+    
 }
