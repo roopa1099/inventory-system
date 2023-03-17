@@ -1,6 +1,7 @@
 package com.project.management.controller.interf;
 
 import com.project.management.entities.Product;
+import com.project.management.models.SearchRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +30,9 @@ public interface ManagementController {
             @PathVariable Long id);
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping(path = "/products")
+    @PostMapping(path = "/products")
     @ResponseBody
-    public ResponseEntity<Object> getAllProduct(String sortBy, String fieldName, @RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam(defaultValue = "0")Integer pageSize);
+    public ResponseEntity<Object> getAllProduct(@RequestBody SearchRequest request);
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping(path = "/product")

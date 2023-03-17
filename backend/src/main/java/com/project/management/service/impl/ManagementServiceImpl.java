@@ -2,6 +2,10 @@ package com.project.management.service.impl;
 
 import com.project.management.entities.Product;
 import com.project.management.jparepository.ProductDetails;
+import com.project.management.models.Filter;
+import com.project.management.models.Pagination;
+import com.project.management.models.SearchRequest;
+import com.project.management.models.SortBy;
 import com.project.management.service.interf.ManagementService;
 import com.project.management.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,20 +55,20 @@ public class ManagementServiceImpl implements ManagementService {
     }
 
     @Override
-    public  Page<Product> getProducts(String sortBy, String field,int pageNumber,int pageSize) {
+    public  Page<Product> getProducts(SearchRequest request) {
         List<Product> allProducts= this.productJpaRepo.findAll();
         // it stores the capacity of all the shelf and will be used for color coding
         Map<Integer,Integer> shelfUsedSpace = Utils.getShelfUsedSpace(allProducts);
 
-        Pageable page = getPageable(pageNumber,pageSize,sortBy,field);
-        Page<Product> allProductsPage= this.productJpaRepo.findAll(page);
+        Pageable page = getPageable(request.getPagination(), request.getSortBy());
+        Page<Product> allProductsPage= filterProducts(page,request.getFilterBy());
 
         // sets the available space for all the products based on their shelf
         allProductsPage.forEach(product -> {
-                product.setAvlSpaceForShelf(max_capacity - shelfUsedSpace.get(product.getShelfNumber()));
-            });
+            product.setAvlSpaceForShelf(max_capacity - shelfUsedSpace.get(product.getShelfNumber()));
+        });
 
-            return allProductsPage;
+        return allProductsPage;
     }
 
     @Override
@@ -90,7 +94,7 @@ public class ManagementServiceImpl implements ManagementService {
         Map<Integer,Integer> shelfUsedSpace = Utils.getShelfUsedSpace(allProducts);
 
         // get the paginated products by name in sorted order by product name
-        Pageable page = getPageable(pageNumber,pageSize,"ASC","productName");
+        Pageable page = getPageable(null,null);
         List<Product> allProductsPage= this.productJpaRepo.findAllByProductName(name,page);
         // sets the available space for all the products based on their shelf
         allProductsPage.forEach(product -> {
@@ -104,32 +108,32 @@ public class ManagementServiceImpl implements ManagementService {
         List<Product> prodList=this.productJpaRepo.findAllByShelfNumber(product.getShelfNumber());
         int availability = Utils.getShelfAvailability(prodList, max_capacity);
 
-       Product currentProduct = this.productJpaRepo.findById(product.getId()).orElse(null);
-       if(currentProduct == null){
-           throw new Exception("Product doesn't exists");
+        Product currentProduct = this.productJpaRepo.findById(product.getId()).orElse(null);
+        if(currentProduct == null){
+            throw new Exception("Product doesn't exists");
         }
 
-       // shelf number remains same after update
-       if(currentProduct.getShelfNumber() == product.getShelfNumber()){
-           if(availability >= (product.getQuantity()-currentProduct.getQuantity())){
-               SaveOrUpdateExistingProduct(prodList,product);
-           } else{
-               throw new Exception("No space left in this shelf. Please try with another shelf");
-           }
+        // shelf number remains same after update
+        if(currentProduct.getShelfNumber() == product.getShelfNumber()){
+            if(availability >= (product.getQuantity()-currentProduct.getQuantity())){
+                SaveOrUpdateExistingProduct(prodList,product);
+            } else{
+                throw new Exception("No space left in this shelf. Please try with another shelf");
+            }
         } else{
-           // shelf number changed
-           if(availability >= product.getQuantity()){
-               SaveOrUpdateExistingProduct(prodList,product);
-           }else {
-               throw new Exception("No space left in this shelf. Please try with another shelf");
-           }
+            // shelf number changed
+            if(availability >= product.getQuantity()){
+                SaveOrUpdateExistingProduct(prodList,product);
+            }else {
+                throw new Exception("No space left in this shelf. Please try with another shelf");
+            }
         }
         return "Product updated successfully";
     }
 
     @Override
     public void deleteProduct(Long id) {
-            this.productJpaRepo.deleteById(id);
+        this.productJpaRepo.deleteById(id);
     }
 
     @Override
@@ -148,11 +152,16 @@ public class ManagementServiceImpl implements ManagementService {
     }
 
     // get the sorted and paginated records
-    public Pageable getPageable(int pageNumber, int pagSize, String sortBy, String field) {
-        Sort sort = sortBy.equalsIgnoreCase(Sort.Direction.ASC.name())?
-                Sort.by(field).ascending(): Sort.by(field).descending();
+    public Pageable getPageable(Pagination pagination, SortBy sortBy) {
+        Sort sort=null;
+        if(sortBy != null){
+            sort = sortBy.isDescending()? Sort.by(sortBy.getField()).descending(): Sort.by(sortBy.getField()).ascending();
+        }
 
-       return PageRequest.of(pageNumber,pagSize,sort);
+        if(sortBy != null){
+            return PageRequest.of(pagination.getPageNumber(),pagination.getPageSize(),sort);
+        }
+        return PageRequest.of(pagination.getPageNumber(),pagination.getPageSize());
     }
 
     // update the quantity of the existing product if all the params matched
@@ -170,6 +179,39 @@ public class ManagementServiceImpl implements ManagementService {
         }else{
             productJpaRepo.save(product);
         }
+    }
+
+    public Page<Product> filterProducts(Pageable page, Filter filter){
+        if(filter == null){
+            return this.productJpaRepo.findAll(page);
+        }
+
+        boolean categoryFilter = filter.getCategory() != null;
+        boolean pricePerUnitFilter = filter.getPricePerUnit() != 0.0;
+        boolean VendorLinkFilter = filter.getVendorLink() != null;
+
+        if(categoryFilter && pricePerUnitFilter && VendorLinkFilter){
+            return this.productJpaRepo.findByCategoryAndVendorLinkAndPricePerUnit(filter.getCategory(), filter.getVendorLink(), filter.getPricePerUnit(),page);
+        }
+        else if(categoryFilter && pricePerUnitFilter){
+            return this.productJpaRepo.findByCategoryAndPricePerUnit(filter.getCategory(), filter.getPricePerUnit(),page);
+        }
+        else if(categoryFilter && VendorLinkFilter){
+            return this.productJpaRepo.findByCategoryAndVendorLink(filter.getCategory(), filter.getVendorLink(),page);
+        }
+        else if(pricePerUnitFilter && VendorLinkFilter){
+            return this.productJpaRepo.findByVendorLinkAndPricePerUnit(filter.getVendorLink(), filter.getPricePerUnit(),page);
+        }
+        else if(categoryFilter){
+            return this.productJpaRepo.findAllByCategory(filter.getCategory(),page);
+        }
+        else if(pricePerUnitFilter){
+            return  this.productJpaRepo.findAllByPricePerUnit(filter.getPricePerUnit(),page);
+        }
+        else if(VendorLinkFilter){
+            return  this.productJpaRepo.findAllByVendorLink(filter.getVendorLink(),page);
+        }
+        return this.productJpaRepo.findAll(page);
     }
 
 }

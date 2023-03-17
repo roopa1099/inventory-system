@@ -1,6 +1,7 @@
 package com.project.management.service.interf;
 
 import com.project.management.entities.Product;
+import com.project.management.models.SearchRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +17,7 @@ public interface ManagementService {
 
     public void deleteProduct(Long id);
 
-    public Page<Product> getProducts(String sortBy, String field, int pageNumber, int pageSize);
+    public Page<Product> getProducts(SearchRequest request);
 
     public List<Product> getProductsByName(String name, int pageNumber,int pageSize) throws Exception;
 

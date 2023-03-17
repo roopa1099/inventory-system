@@ -28,6 +28,9 @@ export default function RenderTableComponent(props) {
     const [selected, setSelected] = useState([]);
     const [totalElement, setTotalElements] = useState(0);
     const [currentOrder,setCurrentOrder]=useState({fieldName:"id",ascOrder:true});
+    const [category,setCategory]=useState(null);
+    const [pricePerUnit,setPricePerUnit]=useState(0);
+    const [vendorLink,setVendorLink]=useState(null);
 
 
     const columns = [
@@ -99,15 +102,25 @@ export default function RenderTableComponent(props) {
 
 
     const getResposeData = async ({ pageNumber }) => {
-        const orderBy=currentOrder.ascOrder?'asc':'desc'
-        const response = await axios.get(`http://localhost:8290/products`, {
-            params: {
-                sortBy: orderBy,
-                fieldName: currentOrder.fieldName,
-                pageNumber: pageNumber,
-                pageSize: 10
-            }
-        });
+      
+        const orderBy=currentOrder.ascOrder?'asc':'desc';
+        const json={
+                pagination: {
+                    pageNumber: pageNumber,
+                    pageSize: 10
+                },
+                sortBy: {
+                    field: currentOrder.fieldName,
+                    descending: !currentOrder.ascOrder
+                },
+                filterBy: {
+                    category: category,
+                    pricePerUnit: pricePerUnit,
+                    vendorLink: vendorLink
+                }
+        }
+        var data = JSON.parse(JSON.stringify(json))
+        const response = await axios.post(`http://localhost:8290/products`,data);
 
         setResponseData([...response.data.content]);
         setTotalElements(response.data.totalElements);

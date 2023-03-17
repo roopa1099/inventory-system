@@ -12,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Sort {
-    private String sortBy;
-    private String orderBy;
+public class SortBy {
+    private String field;
+    private boolean descending;
 }

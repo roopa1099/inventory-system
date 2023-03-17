@@ -1,5 +1,6 @@
 
-import { AppBar, Toolbar, Typography, Paper, InputBase, IconButton, makeStyles } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Paper, InputBase, IconButton, makeStyles,  } from "@material-ui/core";
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import SearchIcon from "@material-ui/icons/Search";
 import { useState } from "react";
 import React from "react";
@@ -36,8 +37,13 @@ export default function HeaderComponent() {
     return <Toolbar style={{ backgroundColor: '#1B98F5', width:'1900px', display:'flex'}}>{femmecubatorLogo}</Toolbar>;
   };
 
+  const isEmptyOrNot = (value) => {
+    if(value.length == 0)
+    return true;
+    return false;
+}
+
   const onChangeEvent=(event)=>{
-    debugger
     setSearchValue(event.target.value);
   }
 
@@ -45,6 +51,7 @@ export default function HeaderComponent() {
     <div style={{display: 'contents', justifyContent:'space-between'}}>
       <div>
     <Typography variant="h6" component="h1">
+     <CurrencyRupeeIcon/>
       Inventory Management
     </Typography>
     </div>

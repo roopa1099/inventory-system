@@ -45,8 +45,8 @@ const useStyles = makeStyles({
     },
     selectComp:{
         marginLeft:'25px',
-        width: '90px'
-    }
+        width: '105px'
+    },
 })
 
 export default function MainComponent() {

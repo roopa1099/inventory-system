@@ -13,6 +13,6 @@ import lombok.*;
 @Builder
 @ToString
 public class Pagination {
-        private String pageSize;
-        private String pageNumber;
+        private Integer pageSize;
+        private Integer pageNumber;
 }

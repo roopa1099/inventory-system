@@ -15,5 +15,7 @@ import java.util.Map;
 @Builder
 @ToString
 public class Filter {
-    private Map<String,String> filterBy;
+    private String category;
+    private float pricePerUnit;
+    private String vendorLink;
 }
