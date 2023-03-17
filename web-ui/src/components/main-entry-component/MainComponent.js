@@ -11,6 +11,9 @@ import  AddProductComponent from '../add-dialog-component/AddProductComponent';
 import EditProductComponent from "../edit-dialog-component/EditProductComponent";
 import DeleteProductComponent from "../delete-dialog-component/DeleteProduct";
 import { display } from "@mui/system";
+import Input from '@material-ui/core/Input';
+import SearchIcon from "@material-ui/icons/Search";
+import InputAdornment from '@mui/material/InputAdornment';
 
 
 const useStyles = makeStyles({
@@ -44,9 +47,14 @@ const useStyles = makeStyles({
           }
     },
     selectComp:{
-        marginLeft:'25px',
-        width: '105px'
+        marginLeft:'33px',
+        width: '135px',
+        marginTop:'37px'
     },
+    input:{
+        height: '26px',
+        width:'153px'
+    }
 })
 
 export default function MainComponent() {
@@ -56,6 +64,10 @@ export default function MainComponent() {
     const [openEdit, setEditOpen] = useState(false);
     const [openDelete, setDeleteOpen] = useState(false);
     const [selectedData, setSelectedData] = useState([]);
+    const [category, setCategory]=useState("");
+    const [price, setPrice]=useState(0);
+    const [vendorLink, setVendorLink]=useState("");
+    
     
 
 
@@ -88,20 +100,59 @@ export default function MainComponent() {
         setDeleteOpen(false);
     };
 
+    const onFilterCategoryChange=(event)=>{
+        setCategory(event.target.value);
+    };
+
+    const onFilterPriceChange=(event)=>{
+        setPrice(event.target.value);
+    }
+
+
+    const onFilterVendorChange=(event)=>{
+        setVendorLink(event.target.value);
+    }
+
+
     return (
         <div>
             <HeaderComponent />
             <div style={{ marginTop: '120px' }}>
                 <div className={styles.optionDiv}>
-                    <div style={{marginLeft:"5px", display:"flex"}}>
+                    <div style={{ display:"flex"}}>
                         <div className={styles.selectComp}>
-                        <SelectComponent label={'Category'}/>
+                        {/* <label>{'Category'}</label> */}
+                        <input
+                        placeholder="Enter to filter Category"
+                        onChange={onFilterCategoryChange}
+                            variant="outlined"
+                            type="text"
+                            name={'Category'}
+                            id={'Category'}                   
+                            className={styles.input}/>
+                      
                         </div>
                         <div className={styles.selectComp}>
-                        <SelectComponent label={'Shelf Number'}/>
+                        <input
+                            placeholder="Enter to filter Price."
+                            onChange={onFilterPriceChange}
+                            variant="outlined"
+                            type="text"
+                            name={'Price'}
+                            id={'Price'}
+                            className={styles.input}
+                        />
                         </div>
                         <div className={styles.selectComp}>
-                        <SelectComponent label={'Vendor Link'}/>
+                        <input
+                            placeholder="Enter to filter Vendor Link"
+                            onChange={onFilterVendorChange}
+                            variant="outlined"
+                            type="text"
+                            name={'Vendor Link'}
+                            id={'Vendor Link'}
+                            className={styles.input}
+                        />
                         </div>
                     </div>
                     <div className={styles.buttonDiv}>
@@ -114,7 +165,7 @@ export default function MainComponent() {
                     </div>
                 </div>
                 <hr />
-                <RenderTableComponent getSelectedRecord={getSelectedRecord} />
+                <RenderTableComponent searchCategory={category} searchVendorLink={vendorLink} searchPrice={price} getSelectedRecord={getSelectedRecord} />
             </div>
             {openAdd == true && (<AddProductComponent handleCloseProp={handleClose} />)}
             {openEdit == true && (<EditProductComponent selectedData={selectedData}  handleEditClose={handleEditClose} />)}

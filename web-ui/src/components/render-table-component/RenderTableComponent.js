@@ -11,6 +11,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Checkbox } from '@material-ui/core';
+import DebouncingComponent from './DebouncingComponent';
 
 const useStyles = makeStyles({
     noBalance: {
@@ -28,10 +29,13 @@ export default function RenderTableComponent(props) {
     const [selected, setSelected] = useState([]);
     const [totalElement, setTotalElements] = useState(0);
     const [currentOrder,setCurrentOrder]=useState({fieldName:"id",ascOrder:true});
-    const [category,setCategory]=useState(null);
-    const [pricePerUnit,setPricePerUnit]=useState(0);
-    const [vendorLink,setVendorLink]=useState(null);
+    // const [category,setCategory]=useState(null);
+    // const [pricePerUnit,setPricePerUnit]=useState(0);
+    // const [vendorLink,setVendorLink]=useState(null);
 
+    const debouncedSearchCategory = DebouncingComponent(props.searchCategory, 1500);
+    const debouncedSearchPrice = DebouncingComponent(props.searchPrice, 1500);
+    const debouncedSearchVendorLink = DebouncingComponent(props.searchVendorLink, 1500);
 
     const columns = [
         { id: 'id', label: 'Product ID', minWidth: 170 },
@@ -104,6 +108,9 @@ export default function RenderTableComponent(props) {
     const getResposeData = async ({ pageNumber }) => {
       
         const orderBy=currentOrder.ascOrder?'asc':'desc';
+        const searchCat=debouncedSearchCategory==""?null:debouncedSearchCategory;
+        const searchPrice=debouncedSearchPrice;
+        const searchVendorLink=debouncedSearchVendorLink==""?null:debouncedSearchVendorLink;
         const json={
                 pagination: {
                     pageNumber: pageNumber,
@@ -114,9 +121,9 @@ export default function RenderTableComponent(props) {
                     descending: !currentOrder.ascOrder
                 },
                 filterBy: {
-                    category: category,
-                    pricePerUnit: pricePerUnit,
-                    vendorLink: vendorLink
+                    category: searchCat,
+                    pricePerUnit: searchPrice,
+                    vendorLink: searchVendorLink
                 }
         }
         var data = JSON.parse(JSON.stringify(json))
@@ -151,7 +158,7 @@ export default function RenderTableComponent(props) {
     useEffect(() => {
         getResposeData({ pageNumber: page });
 
-    }, [page,currentOrder]);
+    }, [page,currentOrder,debouncedSearchCategory,debouncedSearchPrice,debouncedSearchVendorLink]);
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>

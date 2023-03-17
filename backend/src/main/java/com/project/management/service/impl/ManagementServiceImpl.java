@@ -151,6 +151,28 @@ public class ManagementServiceImpl implements ManagementService {
         throw new Exception("Invalid csv file format");
     }
 
+    @Override
+    public List<Product> findProductsByContent(String content) throws Exception {
+        if(content==null){
+            throw new Exception("content should not be empty");
+        }
+
+        List<Product> allProducts= this.productJpaRepo.findAll();
+
+        List<Product> filteredProducts= new ArrayList<>();
+        // it stores the capacity of all the shelf and will be used for color coding
+        Map<Integer,Integer> shelfUsedSpace = Utils.getShelfUsedSpace(allProducts);
+
+        allProducts.forEach(product -> {
+            if(Utils.productMatchContent(product,content)){
+                product.setAvlSpaceForShelf(max_capacity - shelfUsedSpace.get(product.getShelfNumber()));
+                filteredProducts.add(product);
+            }
+        });
+
+        return filteredProducts;
+    }
+
     // get the sorted and paginated records
     public Pageable getPageable(Pagination pagination, SortBy sortBy) {
         Sort sort=null;

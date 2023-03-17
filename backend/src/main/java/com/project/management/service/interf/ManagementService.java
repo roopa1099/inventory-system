@@ -22,5 +22,7 @@ public interface ManagementService {
     public List<Product> getProductsByName(String name, int pageNumber,int pageSize) throws Exception;
 
     public String uploadFile(MultipartFile file) throws Exception;
+
+    public List<Product> findProductsByContent(String content) throws Exception;
 }
 

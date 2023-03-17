@@ -98,6 +98,17 @@ public class ManagementControllerImpl implements ManagementController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<Object> findProductsByContent(String content) {
+        try{
+            List<Product> products = this.managementService.findProductsByContent(content);
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }
 
 

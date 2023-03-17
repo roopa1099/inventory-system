@@ -52,4 +52,10 @@ public interface ManagementController {
     @ResponseBody
     public ResponseEntity<String> upload(
             @RequestPart MultipartFile file);
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping(path = "/product/find/{content}")
+    @ResponseBody
+    public ResponseEntity<Object> findProductsByContent(
+            @PathVariable String content);
 }

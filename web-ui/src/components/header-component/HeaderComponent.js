@@ -50,9 +50,9 @@ export default function HeaderComponent() {
   const femmecubatorLogo = (
     <div style={{display: 'contents', justifyContent:'space-between'}}>
       <div>
-    <Typography variant="h6" component="h1">
-     <CurrencyRupeeIcon/>
-      Inventory Management
+    <Typography variant="h4" component="h1" display="flex">
+     <CurrencyRupeeIcon/> &nbsp;
+      SMN Products
     </Typography>
     </div>
      <div style={{paddingLeft:'1300px'}}>
