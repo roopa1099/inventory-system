@@ -30,7 +30,7 @@ const useStyles = makeStyles({
     }
 }
 )
-export default function HeaderComponent() {
+export default function HeaderComponent(props) {
   const classes=useStyles();
   const [searchValue,setSearchValue]=useState("");
   const displayDesktop = () => {
@@ -45,6 +45,16 @@ export default function HeaderComponent() {
 
   const onChangeEvent=(event)=>{
     setSearchValue(event.target.value);
+    if(event.target.value==""){
+      props.searchValue(event.target.value);
+    }
+
+  }
+
+  const onClickSearch=(event)=>{
+    event.preventDefault();
+    props.searchValue(searchValue);
+   
   }
 
   const femmecubatorLogo = (
@@ -55,12 +65,12 @@ export default function HeaderComponent() {
       SMN Products
     </Typography>
     </div>
-     <div style={{paddingLeft:'1300px'}}>
+     <div style={{paddingLeft:'1250px'}}>
      <Paper component="form" className={classes.searchpaper} >
-       <InputBase className={classes.input} placeholder="Search by Product Name"
+       <InputBase className={classes.input} placeholder="Search"
          onChange={onChangeEvent}
-         inputProps={{ 'aria-label': 'Search by Invoice Number', size: 'small', color: 'primary' }} />
-       <IconButton type="submit" className={classes.iconButton} aria-label="search">
+         inputProps={{ 'aria-label': 'Search', size: 'small', color: 'primary' }} />
+       <IconButton type="submit" className={classes.iconButton} aria-label="search" onClick={onClickSearch}>
          <SearchIcon color="primary" fontSize="small" />
        </IconButton>
      </Paper>

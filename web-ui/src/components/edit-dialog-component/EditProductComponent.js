@@ -92,7 +92,7 @@ export default function EditProductComponent(props) {
                 handleClose();
                 window.location.reload(true);
             }, (error) => {
-                alert(error);
+                alert(error.response.data);
             });
         }
 

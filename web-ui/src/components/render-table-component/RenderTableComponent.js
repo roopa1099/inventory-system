@@ -29,13 +29,13 @@ export default function RenderTableComponent(props) {
     const [selected, setSelected] = useState([]);
     const [totalElement, setTotalElements] = useState(0);
     const [currentOrder,setCurrentOrder]=useState({fieldName:"id",ascOrder:true});
-    // const [category,setCategory]=useState(null);
-    // const [pricePerUnit,setPricePerUnit]=useState(0);
-    // const [vendorLink,setVendorLink]=useState(null);
+    const [searchData,setSearchData]=useState([]);
+    const [searchValue, setSearchValue]=useState("");
 
     const debouncedSearchCategory = DebouncingComponent(props.searchCategory, 1500);
     const debouncedSearchPrice = DebouncingComponent(props.searchPrice, 1500);
     const debouncedSearchVendorLink = DebouncingComponent(props.searchVendorLink, 1500);
+    const debouncedSearchItem=DebouncingComponent(props.searchValue, 1500);
 
     const columns = [
         { id: 'id', label: 'Product ID', minWidth: 170 },
@@ -101,9 +101,13 @@ export default function RenderTableComponent(props) {
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
+        if(props.searchValue!=""){
+            const startIndex=newPage*10
+            const endIndex=startIndex+10;
+            const responseData=searchData.slice(startIndex,endIndex);
+            setResponseData([...responseData]);
+        }
     };
-
-
 
     const getResposeData = async ({ pageNumber }) => {
       
@@ -155,10 +159,31 @@ export default function RenderTableComponent(props) {
         return capacity == 0
     };
 
-    useEffect(() => {
-        getResposeData({ pageNumber: page });
+    const getSearchResponse=async ()=>{
+        const searchedData= await axios.get(`http://localhost:8290/product/find/${props.searchValue}`);
+        setSearchValue(props.searchValue);
+        setSearchData([...searchedData.data]);
+        if(searchedData.data.length>0){
+            const responseData=searchedData.data.slice(0,10);
+            setResponseData([...responseData]);
+        }
+        else{
+            setResponseData([]);
+        }
+    
+        setTotalElements(searchedData.data.length);
+    }
 
-    }, [page,currentOrder,debouncedSearchCategory,debouncedSearchPrice,debouncedSearchVendorLink]);
+    useEffect(() => {
+        if(props.searchValue==""){
+           getResposeData({ pageNumber: page });
+           setSearchValue(props.searchValue);
+        }
+        else if(props.searchValue!=searchValue){
+            getSearchResponse();
+        }
+
+    }, [page,currentOrder,debouncedSearchCategory,debouncedSearchPrice,debouncedSearchVendorLink,props.searchValue]);
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>

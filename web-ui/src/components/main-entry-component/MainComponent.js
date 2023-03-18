@@ -1,7 +1,7 @@
 import HeaderComponent from "../header-component/HeaderComponent";
 import RenderTableComponent from "../render-table-component/RenderTableComponent";
 import { SelectComponent } from "../select-component/SelectComponent"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
@@ -10,10 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 import  AddProductComponent from '../add-dialog-component/AddProductComponent';
 import EditProductComponent from "../edit-dialog-component/EditProductComponent";
 import DeleteProductComponent from "../delete-dialog-component/DeleteProduct";
-import { display } from "@mui/system";
-import Input from '@material-ui/core/Input';
-import SearchIcon from "@material-ui/icons/Search";
-import InputAdornment from '@mui/material/InputAdornment';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 
 const useStyles = makeStyles({
@@ -67,6 +64,7 @@ export default function MainComponent() {
     const [category, setCategory]=useState("");
     const [price, setPrice]=useState(0);
     const [vendorLink, setVendorLink]=useState("");
+    const [searchValue,setSearchValue]=useState("");
     
     
 
@@ -116,11 +114,12 @@ export default function MainComponent() {
 
     return (
         <div>
-            <HeaderComponent />
+            <HeaderComponent searchValue={setSearchValue}/>
             <div style={{ marginTop: '120px' }}>
                 <div className={styles.optionDiv}>
                     <div style={{ display:"flex"}}>
-                        <div className={styles.selectComp}>
+                        <div style={{marginTop:"5px"}}> <FilterListIcon/></div>
+                        <div style={{width:'135px',marginTop:'37px', marginLeft:"12px"}}>
                         {/* <label>{'Category'}</label> */}
                         <input
                         placeholder="Enter to filter Category"
@@ -165,7 +164,7 @@ export default function MainComponent() {
                     </div>
                 </div>
                 <hr />
-                <RenderTableComponent searchCategory={category} searchVendorLink={vendorLink} searchPrice={price} getSelectedRecord={getSelectedRecord} />
+                <RenderTableComponent searchValue={searchValue} searchCategory={category} searchVendorLink={vendorLink} searchPrice={price} getSelectedRecord={getSelectedRecord} />
             </div>
             {openAdd == true && (<AddProductComponent handleCloseProp={handleClose} />)}
             {openEdit == true && (<EditProductComponent selectedData={selectedData}  handleEditClose={handleEditClose} />)}
