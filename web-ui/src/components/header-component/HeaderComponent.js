@@ -62,7 +62,7 @@ export default function HeaderComponent(props) {
       <div>
     <Typography variant="h4" component="h1" display="flex">
      <CurrencyRupeeIcon fontSize="30px"/> &nbsp;
-      SMN Products
+     SMN Products
     </Typography>
     </div>
      <div style={{paddingLeft:'1210px',paddingBottom: '10px'}}>

@@ -16,10 +16,10 @@ import { color } from "@mui/system";
 
 const useStyles = makeStyles({
     noBalance: {
-       color:'#C0392B'
+        color: '#C0392B'
     },
     lessBalance: {
-       color:'#F1C40F'
+        color: '#F1C40F'
     }
 })
 
@@ -29,14 +29,15 @@ export default function RenderTableComponent(props) {
     const [responseData, setResponseData] = useState([]);
     const [selected, setSelected] = useState([]);
     const [totalElement, setTotalElements] = useState(0);
-    const [currentOrder,setCurrentOrder]=useState({fieldName:"id",ascOrder:true});
-    const [searchData,setSearchData]=useState([]);
-    const [searchValue, setSearchValue]=useState("");
+    const [currentOrder, setCurrentOrder] = useState({ fieldName: "id", ascOrder: true });
+    const [searchData, setSearchData] = useState([]);
+    const [searchValue, setSearchValue] = useState("");
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const debouncedSearchCategory = DebouncingComponent(props.searchCategory, 1500);
     const debouncedSearchPrice = DebouncingComponent(props.searchPrice, 1500);
     const debouncedSearchVendorLink = DebouncingComponent(props.searchVendorLink, 1500);
-    const debouncedSearchItem=DebouncingComponent(props.searchValue, 1500);
+
 
     const columns = [
         { id: 'id', label: 'Product ID', minWidth: 170 },
@@ -100,89 +101,94 @@ export default function RenderTableComponent(props) {
 
     };
 
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
-        if(props.searchValue!=""){
-            const startIndex=newPage*10
-            const endIndex=startIndex+10;
-            const responseData=searchData.slice(startIndex,endIndex);
+        if (props.searchValue != "") {
+            const startIndex = newPage * 10
+            const endIndex = startIndex + 10;
+            const responseData = searchData.slice(startIndex, endIndex);
             setResponseData([...responseData]);
         }
     };
 
     const getResposeData = async ({ pageNumber }) => {
-      
-        const orderBy=currentOrder.ascOrder?'asc':'desc';
-        const searchCat=debouncedSearchCategory==""?null:debouncedSearchCategory;
-        const searchPrice=debouncedSearchPrice;
-        const searchVendorLink=debouncedSearchVendorLink==""?null:debouncedSearchVendorLink;
-        const json={
-                pagination: {
-                    pageNumber: pageNumber,
-                    pageSize: 10
-                },
-                sortBy: {
-                    field: currentOrder.fieldName,
-                    descending: !currentOrder.ascOrder
-                },
-                filterBy: {
-                    category: searchCat,
-                    pricePerUnit: searchPrice,
-                    vendorLink: searchVendorLink
-                }
+
+        const orderBy = currentOrder.ascOrder ? 'asc' : 'desc';
+        const searchCat = debouncedSearchCategory == "" ? null : debouncedSearchCategory;
+        const searchPrice = debouncedSearchPrice;
+        const searchVendorLink = debouncedSearchVendorLink == "" ? null : debouncedSearchVendorLink;
+        const json = {
+            pagination: {
+                pageNumber: pageNumber,
+                pageSize: rowsPerPage
+            },
+            sortBy: {
+                field: currentOrder.fieldName,
+                descending: !currentOrder.ascOrder
+            },
+            filterBy: {
+                category: searchCat,
+                pricePerUnit: searchPrice,
+                vendorLink: searchVendorLink
+            }
         }
         var data = JSON.parse(JSON.stringify(json))
-        const response = await axios.post(`http://localhost:8290/products`,data);
+        const response = await axios.post(`http://localhost:8290/products`, data);
 
         setResponseData([...response.data.content]);
         setTotalElements(response.data.totalElements);
     }
 
-    const handleHeaderClick=(event)=>{
-        let orderNow="asc";
-        const fieldName=event.target.id;
-        if(currentOrder.fieldName==fieldName){
-           setCurrentOrder({fieldName:fieldName,ascOrder:!currentOrder.ascOrder});
+    const handleHeaderClick = (event) => {
+        let orderNow = "asc";
+        const fieldName = event.target.id;
+        if (currentOrder.fieldName == fieldName) {
+            setCurrentOrder({ fieldName: fieldName, ascOrder: !currentOrder.ascOrder });
         }
-        else{
-            setCurrentOrder({fieldName:fieldName,ascOrder:true});
-        }   
+        else {
+            setCurrentOrder({ fieldName: fieldName, ascOrder: true });
+        }
 
     }
 
 
-    const isBalanceAvailable =(capacity) => capacity > 5;
+    const isBalanceAvailable = (capacity) => capacity > 5;
 
     const isEmpty = (capacity) => {
         console.log(capacity == 0);
         return capacity == 0
     };
 
-    const getSearchResponse=async ()=>{
-        const searchedData= await axios.get(`http://localhost:8290/product/find/${props.searchValue}`);
+    const getSearchResponse = async () => {
+        const searchedData = await axios.get(`http://localhost:8290/product/find/${props.searchValue}`);
         setSearchValue(props.searchValue);
         setSearchData([...searchedData.data]);
-        if(searchedData.data.length>0){
-            const responseData=searchedData.data.slice(0,10);
+        if (searchedData.data.length > 0) {
+            const responseData = searchedData.data.slice(0, 10);
             setResponseData([...responseData]);
         }
-        else{
+        else {
             setResponseData([]);
         }
-    
+
         setTotalElements(searchedData.data.length);
     }
 
     useEffect(() => {
-        if(props.searchValue==""){
-           getResposeData({ pageNumber: page });
-           setSearchValue(props.searchValue);
+        if (props.searchValue == "") {
+            getResposeData({ pageNumber: page });
+            setSearchValue(props.searchValue);
         }
-        else if(props.searchValue!=searchValue){
+        else if (props.searchValue != searchValue) {
             getSearchResponse();
         }
 
-    }, [page,currentOrder,debouncedSearchCategory,debouncedSearchPrice,debouncedSearchVendorLink,props.searchValue]);
+    }, [page, currentOrder, debouncedSearchCategory, debouncedSearchPrice, debouncedSearchVendorLink, props.searchValue, rowsPerPage]);
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -197,13 +203,13 @@ export default function RenderTableComponent(props) {
                                     id={column.id}
                                     onClick={handleHeaderClick}
                                     align={column.align}
-                                    style={{ minWidth: column.minWidth, fontSize: '15px'  }}
+                                    style={{ minWidth: column.minWidth, fontSize: '15px' }}
                                 >
                                     {column.label}
-                                    {column.id==currentOrder.fieldName && currentOrder.ascOrder?
-                                    <ArrowDownwardIcon fontSize="small"/>:""
+                                    {column.id == currentOrder.fieldName && currentOrder.ascOrder ?
+                                        <ArrowDownwardIcon fontSize="small" /> : ""
                                     }
-                                
+
                                 </TableCell>
                             ))}
                         </TableRow>
@@ -227,8 +233,8 @@ export default function RenderTableComponent(props) {
                                     <TableCell align='right' width='170px'>{column.category}</TableCell>
                                     <TableCell align='right' width='170px'>{column.shelfNumber}</TableCell>
                                     <TableCell align='right' width='170px'>{column.pricePerUnit}</TableCell>
-                                    {isBalanceAvailable(column.avlSpaceForShelf) && <TableCell align="right" style={{width: '12px'}}>{column.quantity}</TableCell>}
-                                    {!isBalanceAvailable(column.avlSpaceForShelf) && <TableCell align="right" style={{color:isEmpty(column.avlSpaceForShelf)?"red":"rgb(216 157 24)", width: '12px'}}>{column.quantity}</TableCell>}
+                                    {isBalanceAvailable(column.avlSpaceForShelf) && <TableCell align="right" style={{ width: '12px' }}>{column.quantity}</TableCell>}
+                                    {!isBalanceAvailable(column.avlSpaceForShelf) && <TableCell align="right" style={{ color: isEmpty(column.avlSpaceForShelf) ? "red" : "rgb(216 157 24)", width: '12px' }}>{column.quantity}</TableCell>}
                                     {/* <TableCell align="right"  width='170px'>{column.quantity}</TableCell> */}
                                     <TableCell align='right' width='170px'>{column.vendorLink}</TableCell>
                                 </TableRow>
@@ -242,7 +248,8 @@ export default function RenderTableComponent(props) {
                 count={totalElement}
                 page={page}
                 onPageChange={handleChangePage}
-                rowsPerPage={10}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
             />
         </Paper>
     );
