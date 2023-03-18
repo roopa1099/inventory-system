@@ -118,7 +118,7 @@ export default function MainComponent() {
             <div style={{ marginTop: '120px' }}>
                 <div className={styles.optionDiv}>
                     <div style={{ display:"flex"}}>
-                        <div style={{marginTop:"5px"}}> <FilterListIcon/></div>
+                        <div style={{marginTop:"40px"}}> <FilterListIcon/></div>
                         <div style={{width:'135px',marginTop:'37px', marginLeft:"12px"}}>
                         {/* <label>{'Category'}</label> */}
                         <input
@@ -155,8 +155,8 @@ export default function MainComponent() {
                         </div>
                     </div>
                     <div className={styles.buttonDiv}>
-                        <Button  className={styles.addButton}  onClick={addProductRecord} variant="contained">Add &nbsp;
-                        <AddIcon fontSize="small" /></Button>
+                        <Button  className={styles.addButton}  onClick={addProductRecord}  disabled={selectedData.length > 0} variant="contained">Add &nbsp;
+                        <AddIcon fontSize="small"/></Button>
                         <Button   className={styles.editButton} onClick={editProductRecord}  variant="contained" disabled={selectedData.length !== 1}>Edit &nbsp;
                         <EditIcon fontSize="small" /></Button>
                         <Button className={styles.removeButton} onClick={deleteProductRecord} variant="contained" disabled={selectedData.length !== 1}>Delete &nbsp;

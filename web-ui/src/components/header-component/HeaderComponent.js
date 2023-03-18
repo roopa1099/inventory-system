@@ -61,11 +61,11 @@ export default function HeaderComponent(props) {
     <div style={{display: 'contents', justifyContent:'space-between'}}>
       <div>
     <Typography variant="h4" component="h1" display="flex">
-     <CurrencyRupeeIcon/> &nbsp;
+     <CurrencyRupeeIcon fontSize="30px"/> &nbsp;
       SMN Products
     </Typography>
     </div>
-     <div style={{paddingLeft:'1250px'}}>
+     <div style={{paddingLeft:'1210px',paddingBottom: '10px'}}>
      <Paper component="form" className={classes.searchpaper} >
        <InputBase className={classes.input} placeholder="Search"
          onChange={onChangeEvent}

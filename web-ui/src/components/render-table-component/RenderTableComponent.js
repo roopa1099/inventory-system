@@ -12,6 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Checkbox } from '@material-ui/core';
 import DebouncingComponent from './DebouncingComponent';
+import { color } from "@mui/system";
 
 const useStyles = makeStyles({
     noBalance: {
@@ -150,9 +151,7 @@ export default function RenderTableComponent(props) {
     }
 
 
-    const isBalanceAvailable =(capacity) => {
-
-        return capacity > 5};
+    const isBalanceAvailable =(capacity) => capacity > 5;
 
     const isEmpty = (capacity) => {
         console.log(capacity == 0);
@@ -228,8 +227,9 @@ export default function RenderTableComponent(props) {
                                     <TableCell align='right' width='170px'>{column.category}</TableCell>
                                     <TableCell align='right' width='170px'>{column.shelfNumber}</TableCell>
                                     <TableCell align='right' width='170px'>{column.pricePerUnit}</TableCell>
-                                    {/* {isBalanceAvailable(column.avlSpaceForShelf) ? <TableCell align="right" >{column.quantity}</TableCell> : ""} */}
-                                    <TableCell align="right"  width='170px'>{column.quantity}</TableCell>
+                                    {isBalanceAvailable(column.avlSpaceForShelf) && <TableCell align="right" style={{width: '12px'}}>{column.quantity}</TableCell>}
+                                    {!isBalanceAvailable(column.avlSpaceForShelf) && <TableCell align="right" style={{color:isEmpty(column.avlSpaceForShelf)?"red":"rgb(216 157 24)", width: '12px'}}>{column.quantity}</TableCell>}
+                                    {/* <TableCell align="right"  width='170px'>{column.quantity}</TableCell> */}
                                     <TableCell align='right' width='170px'>{column.vendorLink}</TableCell>
                                 </TableRow>
                             );
