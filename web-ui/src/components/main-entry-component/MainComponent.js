@@ -1,6 +1,6 @@
 import HeaderComponent from "../header-component/HeaderComponent";
 import RenderTableComponent from "../render-table-component/RenderTableComponent";
-import { SelectComponent } from "../select-component/SelectComponent"
+import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from "react";
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
@@ -155,12 +155,15 @@ export default function MainComponent() {
                         </div>
                     </div>
                     <div className={styles.buttonDiv}>
+                    <Tooltip title="Click to add new entry">
                         <Button  className={styles.addButton}  onClick={addProductRecord}  disabled={selectedData.length > 0} variant="contained">Add &nbsp;
-                        <AddIcon fontSize="small"/></Button>
+                        <AddIcon fontSize="small"/></Button></Tooltip>
+                        <Tooltip title="Click to edit the entry">
                         <Button   className={styles.editButton} onClick={editProductRecord}  variant="contained" disabled={selectedData.length !== 1}>Edit &nbsp;
-                        <EditIcon fontSize="small" /></Button>
+                        <EditIcon fontSize="small" /></Button></Tooltip>
+                        <Tooltip title="Click to delete the entry">
                         <Button className={styles.removeButton} onClick={deleteProductRecord} variant="contained" disabled={selectedData.length !== 1}>Delete &nbsp;
-                        <RemoveIcon fontSize="small" /></Button>
+                        <RemoveIcon fontSize="small" /></Button></Tooltip>
                     </div>
                 </div>
                 <hr />
