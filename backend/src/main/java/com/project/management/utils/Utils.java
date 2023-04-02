@@ -5,10 +5,7 @@ import com.project.management.entities.Product;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -59,27 +56,27 @@ public class Utils {
     public static List<Product> csvToProducts(MultipartFile file) {
         List<Product> products = new ArrayList<Product>();
 
-            try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
-                 CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
+        try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+             CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
 
-                Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
-                for (CSVRecord csvRecord : csvRecords) {
-                    Product p = new Product();
-                    p.setProductName(csvRecord.get("productName"));
-                    p.setQuantity(Integer.parseInt(csvRecord.get("quantity")));
-                    p.setCategory(csvRecord.get("category"));
-                    p.setPricePerUnit(Float.parseFloat(csvRecord.get("pricePerUnit")));
-                    p.setShelfNumber(Integer.parseInt(csvRecord.get("shelfNumber")));
-                    p.setVendorLink(csvRecord.get("vendorLink"));
+            for (CSVRecord csvRecord : csvRecords) {
+                Product p = new Product();
+                p.setProductName(csvRecord.get("productName"));
+                p.setQuantity(Integer.parseInt(csvRecord.get("quantity")));
+                p.setCategory(csvRecord.get("category"));
+                p.setPricePerUnit(Float.parseFloat(csvRecord.get("pricePerUnit")));
+                p.setShelfNumber(Integer.parseInt(csvRecord.get("shelfNumber")));
+                p.setVendorLink(csvRecord.get("vendorLink"));
 
-                    products.add(p);
-                }
-
-                return products;
-            } catch (IOException e) {
-                throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
+                products.add(p);
             }
+
+            return products;
+        } catch (IOException e) {
+            throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
+        }
     }
 
     public static boolean hasCSVFormat(MultipartFile file) {
@@ -88,6 +85,21 @@ public class Utils {
             return false;
         }
         return true;
+    }
+
+    public static boolean productMatchContent(Product p, String content){
+        if(p.getProductName().toLowerCase().contains(content.toLowerCase()) ||
+                p.getCategory().toLowerCase().contains(content.toLowerCase()) ||
+                p.getVendorLink().toLowerCase().contains(content.toLowerCase())){
+            return true;
+        }
+
+        if(p.getQuantity().toString().equals(content) ||
+                p.getShelfNumber().toString().equals(content) ||
+                p.getPricePerUnit().toString().equals(content)){
+            return true;
+        }
+        return false;
     }
 
 }

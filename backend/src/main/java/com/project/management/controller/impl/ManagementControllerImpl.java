@@ -3,6 +3,7 @@ package com.project.management.controller.impl;
 
 import com.project.management.controller.interf.ManagementController;
 import com.project.management.entities.Product;
+import com.project.management.models.SearchRequest;
 import com.project.management.service.impl.ManagementServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class ManagementControllerImpl implements ManagementController {
     @Override
     public ResponseEntity<String> addProduct(Product input){
         try{
-          String msg = this.managementService.saveProduct(input);
+            String msg = this.managementService.saveProduct(input);
             return ResponseEntity.status(HttpStatus.OK).body(msg);
         }
         catch (Exception e){
@@ -33,10 +34,10 @@ public class ManagementControllerImpl implements ManagementController {
     }
 
     @Override
-    public ResponseEntity<String> deleteById(Long id) {
+    public ResponseEntity<String> deleteProducts(List<Long> productIds) {
         try{
-            this.managementService.deleteProduct(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Product deleted successfully");
+            this.managementService.deleteProducts(productIds);
+            return ResponseEntity.status(HttpStatus.OK).body("Product(s) deleted successfully");
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -46,7 +47,7 @@ public class ManagementControllerImpl implements ManagementController {
     @Override
     public ResponseEntity<Object> getProductById(Long id){
         try{
-           Product res= this.managementService.getProductById(id);
+            Product res= this.managementService.getProductById(id);
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }
         catch (Exception e){
@@ -66,9 +67,9 @@ public class ManagementControllerImpl implements ManagementController {
     }
 
     @Override
-    public ResponseEntity<Object> getAllProduct(String sortBy, String fieldName, Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<Object> getAllProduct(SearchRequest request) {
         try{
-            Page<Product> products =  this.managementService.getProducts(sortBy,fieldName,pageNumber,pageSize);
+            Page<Product> products =  this.managementService.getProducts(request);
             return ResponseEntity.status(HttpStatus.OK).body(products);
         }
         catch (Exception e){
@@ -90,8 +91,19 @@ public class ManagementControllerImpl implements ManagementController {
     @Override
     public ResponseEntity<String> upload(MultipartFile file) {
         try {
-             String msg = this.managementService.uploadFile(file);
+            String msg = this.managementService.uploadFile(file);
             return ResponseEntity.status(HttpStatus.OK).body(msg);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> findProductsByContent(String content) {
+        try{
+            List<Product> products = this.managementService.findProductsByContent(content);
+            return ResponseEntity.status(HttpStatus.OK).body(products);
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

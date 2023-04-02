@@ -1,10 +1,13 @@
 package com.project.management.controller.interf;
 
 import com.project.management.entities.Product;
+import com.project.management.models.SearchRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @RequestMapping
@@ -18,9 +21,9 @@ public interface ManagementController {
     );
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @DeleteMapping(path = "/product/{id}")
+    @DeleteMapping(path = "/products")
     @ResponseBody
-    public ResponseEntity<String> deleteById( @PathVariable Long id);
+    public ResponseEntity<String> deleteProducts( @RequestBody List<Long> ids);
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(path = "/product/{id}")
@@ -29,9 +32,9 @@ public interface ManagementController {
             @PathVariable Long id);
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping(path = "/products")
+    @PostMapping(path = "/products")
     @ResponseBody
-    public ResponseEntity<Object> getAllProduct(String sortBy, String fieldName, @RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam(defaultValue = "0")Integer pageSize);
+    public ResponseEntity<Object> getAllProduct(@RequestBody SearchRequest request);
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping(path = "/product")
@@ -51,4 +54,10 @@ public interface ManagementController {
     @ResponseBody
     public ResponseEntity<String> upload(
             @RequestPart MultipartFile file);
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping(path = "/product/find/{content}")
+    @ResponseBody
+    public ResponseEntity<Object> findProductsByContent(
+            @PathVariable String content);
 }
