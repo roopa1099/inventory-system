@@ -131,9 +131,17 @@ public class ManagementServiceImpl implements ManagementService {
         return "Product updated successfully";
     }
 
-    @Override
-    public void deleteProduct(Long id) {
+
+    private void deleteProductById(Long id) {
         this.productJpaRepo.deleteById(id);
+    }
+
+    @Override
+    public void deleteProducts(List<Long> productIds) {
+        productIds.forEach(productId ->{
+            this.deleteProductById(productId);
+        });
+
     }
 
     @Override

@@ -7,6 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { Grid, Button, makeStyles, InputLabel } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
 import WarningIcon from '@material-ui/icons/Warning';
+import { NotificationManager} from 'react-notifications';
 import axios from 'axios';
 
 export default function EditProductComponent(props) {
@@ -88,11 +89,11 @@ export default function EditProductComponent(props) {
 
             axios.put('http://localhost:8290/product', source
             ).then((response) => {
-                alert("Record Succesfully Edited");
+                setTimeout(()=>window.location.reload(),2000);
+                NotificationManager.success("Data updated", 'Successful!', 2000);
                 handleClose();
-                window.location.reload(true);
             }, (error) => {
-                alert(error.response.data);
+                NotificationManager.error(error.response.data, 'Failed!', 3000);
             });
         }
 
@@ -164,6 +165,7 @@ export default function EditProductComponent(props) {
                                         <Grid item xs={8}>
                                             <input
                                                 required={true}
+                                                min="0"
                                                 variant="outlined"
                                                 type="number"
                                                 name="quantity"
@@ -182,6 +184,7 @@ export default function EditProductComponent(props) {
                                         <Grid item xs={8}>
                                             <input
                                                 required={true}
+                                                min="0"
                                                 variant="outlined"
                                                 type="number"
                                                 name="pricePerUnit"
@@ -199,6 +202,7 @@ export default function EditProductComponent(props) {
                                         <Grid item xs={8}>
                                             <input
                                                 required={true}
+                                                min="0"
                                                 variant="outlined"
                                                 type="number"
                                                 name="shelfNumber"

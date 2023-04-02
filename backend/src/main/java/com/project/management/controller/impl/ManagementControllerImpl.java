@@ -34,10 +34,10 @@ public class ManagementControllerImpl implements ManagementController {
     }
 
     @Override
-    public ResponseEntity<String> deleteById(Long id) {
+    public ResponseEntity<String> deleteProducts(List<Long> productIds) {
         try{
-            this.managementService.deleteProduct(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Product deleted successfully");
+            this.managementService.deleteProducts(productIds);
+            return ResponseEntity.status(HttpStatus.OK).body("Product(s) deleted successfully");
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

@@ -12,7 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Checkbox } from '@material-ui/core';
 import DebouncingComponent from './DebouncingComponent';
-import { color } from "@mui/system";
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 const useStyles = makeStyles({
     noBalance: {
@@ -139,7 +139,6 @@ export default function RenderTableComponent(props) {
         }
         var data = JSON.parse(JSON.stringify(json))
         const response = await axios.post(`http://localhost:8290/products`, data);
-
         setResponseData([...response.data.content]);
         setTotalElements(response.data.totalElements);
     }
@@ -225,7 +224,7 @@ export default function RenderTableComponent(props) {
                                         id={column.id.toString()}
                                         onChange={(event) => handleClick(event, column.id)}
                                         checked={isItemSelected}
-                                        disabled={selected.length > 0 && !isItemSelected}
+                                        // disabled={selected.length > 0 && !isItemSelected}
                                     />
                                     </TableCell>
                                     <TableCell width='170px'>{column.id}</TableCell>

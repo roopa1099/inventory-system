@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 
 @RequestMapping
 public interface ManagementController {
@@ -19,9 +21,9 @@ public interface ManagementController {
     );
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @DeleteMapping(path = "/product/{id}")
+    @DeleteMapping(path = "/products")
     @ResponseBody
-    public ResponseEntity<String> deleteById( @PathVariable Long id);
+    public ResponseEntity<String> deleteProducts( @RequestBody List<Long> ids);
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(path = "/product/{id}")

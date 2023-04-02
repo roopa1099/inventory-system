@@ -11,6 +11,8 @@ import  AddProductComponent from '../add-dialog-component/AddProductComponent';
 import EditProductComponent from "../edit-dialog-component/EditProductComponent";
 import DeleteProductComponent from "../delete-dialog-component/DeleteProduct";
 import FilterListIcon from '@mui/icons-material/FilterList';
+import { NotificationContainer } from "react-notifications";
+import 'react-notifications/lib/notifications.css';
 
 
 const useStyles = makeStyles({
@@ -159,14 +161,15 @@ export default function MainComponent() {
                         <Button  className={styles.addButton}  onClick={addProductRecord}  disabled={selectedData.length > 0} variant="contained">Add &nbsp;
                         <AddIcon fontSize="small"/></Button></Tooltip>
                         <Tooltip title="Click to edit the entry">
-                        <Button   className={styles.editButton} onClick={editProductRecord}  variant="contained" disabled={selectedData.length !== 1}>Edit &nbsp;
+                        <Button   className={styles.editButton} onClick={editProductRecord}  variant="contained" disabled={selectedData.length != 1}>Edit &nbsp;
                         <EditIcon fontSize="small" /></Button></Tooltip>
                         <Tooltip title="Click to delete the entry">
-                        <Button className={styles.removeButton} onClick={deleteProductRecord} variant="contained" disabled={selectedData.length !== 1}>Delete &nbsp;
+                        <Button className={styles.removeButton} onClick={deleteProductRecord} variant="contained" disabled={selectedData.length == 0}>Delete &nbsp;
                         <RemoveIcon fontSize="small" /></Button></Tooltip>
                     </div>
                 </div>
                 <hr />
+                <NotificationContainer/>
                 <RenderTableComponent searchValue={searchValue} searchCategory={category} searchVendorLink={vendorLink} searchPrice={price} getSelectedRecord={getSelectedRecord} />
             </div>
             {openAdd == true && (<AddProductComponent handleCloseProp={handleClose} />)}

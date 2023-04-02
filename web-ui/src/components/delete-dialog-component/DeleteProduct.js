@@ -5,7 +5,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Snackbar from '@material-ui/core/Snackbar';
 import { InputBase, TextField, OutlinedInput, Button, makeStyles } from '@material-ui/core';
-// import { useStyles } from '@material-ui/pickers/views/Calendar/SlideTransition';
+import { NotificationManager} from 'react-notifications';
 import axios from 'axios';
 export default function DeleteProductComponent(props)
 {  
@@ -18,16 +18,15 @@ export default function DeleteProductComponent(props)
     
     const deleteRecords = () =>
     {
-        const id=props.selectedData[0];
-        
-        axios.delete(`http://localhost:8290/product/${id}`)
+        axios.delete()
+        axios.delete(`http://localhost:8290/products`,{data:props.selectedData})
             .then((response) => {
                 console.log(response);
-                alert("Record Succesfully Deleted");
-                window.location.reload(true);
+                setTimeout(()=>window.location.reload(),2000);
+                NotificationManager.success("Data deleted", 'Successful!', 2000);
                 handleClose();
             }, (error) => {
-                console.log(error);
+                NotificationManager.error(error.response.data, 'Failed!', 3000);
             });
 
             

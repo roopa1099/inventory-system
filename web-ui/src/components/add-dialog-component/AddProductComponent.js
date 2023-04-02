@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { InputLabel, makeStyles, Paper } from '@material-ui/core';
+import 'react-notifications/lib/notifications.css';
 import { Button } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -12,7 +13,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Snackbar from '@material-ui/core/Snackbar';
 import WarningIcon from '@material-ui/icons/Warning';
-import CloseIcon from '@mui/icons-material/Close';
+import { NotificationManager} from 'react-notifications';
 import { IconButton } from '@mui/material';
 
 export default function AddProductComponent(props) {
@@ -44,11 +45,12 @@ export default function AddProductComponent(props) {
 
         )
             .then((response) => {
-                alert(response.data);
-                window.location.reload(true);
-                this.closeDialog();
+                setTimeout(()=>window.location.reload(),2000);
+                NotificationManager.success(response.data, 'Successful!', 2000);
+                props.handleCloseProp();
+        
             }, (error) => {
-                alert(error.response.data);
+                NotificationManager.error(error.response.data, 'Failed!', 3000);
             });
     }
 
@@ -63,6 +65,7 @@ export default function AddProductComponent(props) {
         }
         return true;
     }
+
     const closeDialog = () => {
         props.handleCloseProp();
     }
@@ -125,6 +128,7 @@ export default function AddProductComponent(props) {
                                         <Grid item xs={6}>
                                             <input
                                                 required  = {true}
+                                                min="0"
                                                 variant="outlined"
                                                 type="number"
                                                 name="quantity"
@@ -160,6 +164,7 @@ export default function AddProductComponent(props) {
                                         <Grid item xs={6}>
                                             <input
                                                 required  = {true}
+                                                min="0"
                                                 variant="outlined"
                                                 type="number"
                                                 name="pricePerUnit"
@@ -181,6 +186,7 @@ export default function AddProductComponent(props) {
                                                 <Grid item xs={8}>
                                                     <input
                                                         variant="outlined"
+                                                        min="0"
                                                         name="shelfNumber"
                                                         type="number"
                                                         onChange={e => setShelfNumber(e.target.value)}
@@ -190,7 +196,7 @@ export default function AddProductComponent(props) {
                                             </Grid>
                                             <Grid container className={classes.gridGap} direction="row" alignItems="center">
                                                 <Grid item xs={4}>
-                                                    <InputLabel className={classes.labelRoot} >Vendor Link</InputLabel>
+                                                    <InputLabel className={classes.labelRoot} required>Vendor Link</InputLabel>
                                                 </Grid>
 
                                                 <Grid item xs={8}>

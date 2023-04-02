@@ -15,7 +15,7 @@ public interface ManagementService {
 
     public String updateProduct(Product product) throws Exception;
 
-    public void deleteProduct(Long id);
+    public void deleteProducts(List<Long> productIds);
 
     public Page<Product> getProducts(SearchRequest request);
 
