@@ -10,52 +10,53 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping
 public interface ManagementController {
 
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @PostMapping(path = "/product", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> addProduct(
             @RequestBody Product input
     );
 
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @DeleteMapping(path = "/products")
     @ResponseBody
     public ResponseEntity<String> deleteProducts( @RequestBody List<Long> ids);
 
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @GetMapping(path = "/product/{id}")
     @ResponseBody
     public ResponseEntity<Object> getProductById(
             @PathVariable Long id);
 
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @PostMapping(path = "/products")
     @ResponseBody
     public ResponseEntity<Object> getAllProduct(@RequestBody SearchRequest request);
 
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @PutMapping(path = "/product")
     @ResponseBody
     public ResponseEntity<String> updateProduct(
             @RequestBody Product input
     );
 
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @GetMapping(path = "/product/search/{name}")
     @ResponseBody
     public ResponseEntity<Object> getProductsByName(
             @PathVariable String name, @RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam(defaultValue = "0")Integer pageSize);
 
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @PostMapping(path = "/product/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity<String> upload(
             @RequestPart MultipartFile file);
 
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @GetMapping(path = "/product/find/{content}")
     @ResponseBody
     public ResponseEntity<Object> findProductsByContent(

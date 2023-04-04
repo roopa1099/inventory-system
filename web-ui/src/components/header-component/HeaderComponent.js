@@ -34,7 +34,7 @@ export default function HeaderComponent(props) {
   const classes = useStyles();
   const [searchValue, setSearchValue] = useState("");
   const displayDesktop = () => {
-    return <Toolbar style={{ backgroundColor: '#1B98F5', width: '100%' }}>{femmecubatorLogo}</Toolbar>;
+    return <Toolbar style={{ backgroundColor: '#1B98F5', width:'100%', display:'flex'}}>{femmecubatorLogo}</Toolbar>;
   };
 
   const isEmptyOrNot = (value) => {
@@ -58,24 +58,24 @@ export default function HeaderComponent(props) {
   }
 
   const femmecubatorLogo = (
-    <div style={{ display: 'flex', width:'100%', justifyContent:'space-between' }}>
+    <div style={{display: 'flex', justifyContent:'space-between',width:'100%'}}>
       <div>
-        <Typography variant="h4" component="h1" display="flex">
-          <CurrencyRupeeIcon fontSize="30px" /> &nbsp;
-          StockMate
-        </Typography>
-      </div>
-      <div style={{  paddingBottom: '10px', marginRight:'25px' }}>
-        <Paper component="form" className={classes.searchpaper} >
-          <InputBase className={classes.input} placeholder="Search"
-            onChange={onChangeEvent}
-            inputProps={{ 'aria-label': 'Search', size: 'small', color: 'primary' }} />
-          <IconButton type="submit" className={classes.iconButton} aria-label="search" onClick={onClickSearch}>
-            <SearchIcon color="primary" fontSize="small" />
-          </IconButton>
-        </Paper>
-      </div>
+    <Typography variant="h4" component="h1" display="flex" style={{paddingTop:'5px'}}>
+     <CurrencyRupeeIcon fontSize="30px"/> &nbsp;
+     StockMate
+    </Typography>
     </div>
+     <div style={{paddingRight:'25px',paddingBottom: '10px'}}>
+     <Paper component="form" className={classes.searchpaper} >
+       <InputBase className={classes.input} placeholder="Search"
+         onChange={onChangeEvent}
+         inputProps={{ 'aria-label': 'Search', size: 'small', color: 'primary' }} />
+       <IconButton type="submit" className={classes.iconButton} aria-label="search" onClick={onClickSearch}>
+         <SearchIcon color="primary" fontSize="small" />
+       </IconButton>
+     </Paper>
+     </div>
+     </div>
   );
 
   return (

@@ -12,7 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Checkbox } from '@material-ui/core';
 import DebouncingComponent from './DebouncingComponent';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 const useStyles = makeStyles({
     noBalance: {
@@ -192,7 +192,8 @@ export default function RenderTableComponent(props) {
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer sx={{ maxHeight: '800px' }}>
-                <Table stickyHeader aria-label="sticky table">
+                {responseData.length == 0 && <div display="tableCaption"><h5> No Data to display</h5></div>}
+                {responseData.length > 0 && <Table stickyHeader aria-label="sticky table">
                     <TableHead>
 
                         <TableRow>
@@ -224,7 +225,7 @@ export default function RenderTableComponent(props) {
                                         id={column.id.toString()}
                                         onChange={(event) => handleClick(event, column.id)}
                                         checked={isItemSelected}
-                                        // disabled={selected.length > 0 && !isItemSelected}
+                                    // disabled={selected.length > 0 && !isItemSelected}
                                     />
                                     </TableCell>
                                     <TableCell width='170px'>{column.id}</TableCell>
@@ -240,16 +241,18 @@ export default function RenderTableComponent(props) {
                             );
                         })}
                     </TableBody>
+
                 </Table>
+                }
             </TableContainer>
-            <TablePagination
+            {responseData.length > 0 && <TablePagination
                 component="div"
                 count={totalElement}
                 page={page}
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+            />}
         </Paper>
     );
 }
