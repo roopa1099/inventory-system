@@ -44,7 +44,7 @@ export default function DeleteProductComponent(props)
                 <hr/>
                 <DialogContent>
                     <DialogContentText>
-                       You will lose your record(s) after this action. We cant recover them once you delete.
+                       You will lose your record(s) after this action. We can't recover them once you delete.
 
                     <br>
 

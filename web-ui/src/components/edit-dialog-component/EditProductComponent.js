@@ -126,7 +126,7 @@ export default function EditProductComponent(props) {
                 open={openSnackbar}
                 autoHideDuration={1500}
                 onClose={handleClose}
-                message={<div><WarningIcon style={{ color: 'red' }} size="small" /> <span>  Mandatory Field cant be empty</span></div>}
+                message={<div><WarningIcon style={{ color: 'red' }} size="small" /> <span>  Mandatory Field can't be empty</span></div>}
             />
             <Dialog PaperProps={{
                 classes: {

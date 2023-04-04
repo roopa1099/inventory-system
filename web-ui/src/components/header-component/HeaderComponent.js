@@ -34,7 +34,7 @@ export default function HeaderComponent(props) {
   const classes=useStyles();
   const [searchValue,setSearchValue]=useState("");
   const displayDesktop = () => {
-    return <Toolbar style={{ backgroundColor: '#1B98F5', width:'1900px', display:'flex'}}>{femmecubatorLogo}</Toolbar>;
+    return <Toolbar style={{ backgroundColor: '#1B98F5', width:'100%', display:'flex'}}>{femmecubatorLogo}</Toolbar>;
   };
 
   const isEmptyOrNot = (value) => {
@@ -58,14 +58,14 @@ export default function HeaderComponent(props) {
   }
 
   const femmecubatorLogo = (
-    <div style={{display: 'contents', justifyContent:'space-between'}}>
+    <div style={{display: 'flex', justifyContent:'space-between',width:'100%'}}>
       <div>
-    <Typography variant="h4" component="h1" display="flex">
+    <Typography variant="h4" component="h1" display="flex" style={{paddingTop:'5px'}}>
      <CurrencyRupeeIcon fontSize="30px"/> &nbsp;
      StockMate
     </Typography>
     </div>
-     <div style={{paddingLeft:'1210px',paddingBottom: '10px'}}>
+     <div style={{paddingRight:'25px',paddingBottom: '10px'}}>
      <Paper component="form" className={classes.searchpaper} >
        <InputBase className={classes.input} placeholder="Search"
          onChange={onChangeEvent}
